@@ -7,6 +7,10 @@ class JobService {
   getJob = async (id: string) => {
     return await axiosClient.get(`/jobs/${id}`);
   };
+
+  createJob = async (payload: any) => {
+    return await axiosClient.post(`/jobs`, payload);
+  };
 }
 
 const jobService = new JobService();

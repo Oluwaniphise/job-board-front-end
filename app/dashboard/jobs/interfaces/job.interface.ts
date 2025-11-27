@@ -1,5 +1,5 @@
 export interface Job {
-  _id: string;
+  id: string;
   title: string;
   companyName: string;
   status: "Draft" | "Published" | "Archived";
@@ -8,7 +8,7 @@ export interface Job {
   description: string;
   salaryRange: string;
   jobType: "Full-time" | "Part-time" | "Contract";
-  experienceLevel: "Mid-Level" | "Senior" | "Junior";
+  experienceLevel: "Mid-Level" | "Senior" | "Junior" | "Intern";
   requiredSkills: string[];
   employerId: string;
   createdAt: string;

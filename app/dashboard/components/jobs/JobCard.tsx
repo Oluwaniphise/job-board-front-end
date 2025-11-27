@@ -20,6 +20,7 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  console.log(job)
   const role = useUserStore((state) => state.user?.role);
   const isEmployer = role?.toLowerCase() === "employer";
 
@@ -112,20 +113,20 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         {isEmployer ? (
           <>
             <Link
-              href={`/dashboard/jobs/edit/${job._id}`}
+              href={`/dashboard/jobs/edit/${job.id}`}
               className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
             >
               <FiEdit2 /> Edit
             </Link>
             <button
               className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium"
-              onClick={() => console.log(`Deleting job ${job._id}`)}
+              onClick={() => console.log(`Deleting job ${job.id}`)}
             >
               <FiTrash2 /> Delete
             </button>
             {job.applications > 0 && (
               <Link
-                href={`/jobs/${job._id}/applications`}
+                href={`/jobs/${job.id}/applications`}
                 className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
               >
                 <FiUsers /> Review Applications
@@ -135,13 +136,13 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         ) : (
           <>
             <Link
-              href={`/dashoard/jobs/${job._id}`}
+              href={`/dashboard/jobs/${job.id}`}
               className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
             >
               <FiFileText /> View Job
             </Link>
             <Link
-              href={`/dashboard/jobs/${job._id}/apply`}
+              href={`/dashboard/jobs/${job.id}/apply`}
               className="ml-auto inline-flex items-center gap-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md shadow-sm transition-colors"
             >
               Apply Now
