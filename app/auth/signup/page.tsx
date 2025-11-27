@@ -37,7 +37,7 @@ const SignUpPage: React.FC = () => {
       toast.success("Registration successful! Please log in.");
 
       setInterval(() => {
-        router.push("/login");
+        router.push("/auth/login");
       }, 2000);
     },
     onError: (error) => {

@@ -22,6 +22,18 @@ const LoginPage: React.FC = () => {
   });
 
   const { setUser } = useUserStore();
+  const accessToken = useUserStore((state) => state.accessToken);
+  const initialize = useUserStore((state) => state.initialize);
+
+  React.useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  React.useEffect(() => {
+    if (accessToken) {
+      router.replace("/dashboard");
+    }
+  }, [accessToken, router]);
 
   const {
     register,

@@ -9,8 +9,8 @@ class AuthService {
     firstName: string;
     lastName: string;
     email: string;
-    role: "candidate" | "employer";
-    password: string;
+    role: "Candidate" | "Employer";
+    passwordHash: string;
   }) => {
     return await axiosClient.post(`/auth/register`, payload);
   };
