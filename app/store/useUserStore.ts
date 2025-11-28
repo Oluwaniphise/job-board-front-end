@@ -39,8 +39,8 @@ export const useUserStore = create<UserState>((set, get) => ({
       }
     } catch (error) {
       // Clear storage if loading failed (e.g., bad JSON format)
-      localStorage.removeItem(USER_STORAGE_KEY);
-      localStorage.removeItem(TOKEN_STORAGE_KEY);
+      // localStorage.removeItem(USER_STORAGE_KEY);
+      // localStorage.removeItem(TOKEN_STORAGE_KEY);
     }
   },
 

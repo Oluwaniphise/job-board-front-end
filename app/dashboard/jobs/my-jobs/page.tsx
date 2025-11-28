@@ -9,9 +9,12 @@ import JobCard from "../../components/jobs/JobCard";
 import jobService from "@/app/services/jobs.service";
 import RoleGuard from "@/app/components/RoleGuard";
 import { FiPlus, FiPlusCircle } from "react-icons/fi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const JobListEmployer: React.FC = () => {
+  const [hydrated, setHydrated] = useState(false);
   const userId = useUserStore((state) => state.user?.id || "");
+  const initialize = useUserStore((state) => state.initialize);
   const [jobsList, setJobsList] = useState([]);
 
   const {
@@ -23,8 +26,13 @@ const JobListEmployer: React.FC = () => {
     isError: isJobsError,
   } = useQuery({
     queryKey: ["dashboard-jobs"],
-    queryFn: async () => jobService.getJobs(""),
+    queryFn: async () => jobService.getMyJobs(),
   });
+
+  useEffect(() => {
+    initialize();
+    setHydrated(true);
+  }, [initialize]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -36,7 +44,7 @@ const JobListEmployer: React.FC = () => {
 
   let content;
 
-  if (!userId) {
+  if (hydrated && !userId) {
     content = (
       <p className="text-red-500 dark:text-red-400">
         Error: User not identified. Please log in.
@@ -48,16 +56,16 @@ const JobListEmployer: React.FC = () => {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4 animate-pulse"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4"
           >
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <Skeleton className="h-6 w-3/4" />
             <div className="flex space-x-4">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-4 w-1/4" />
             </div>
             <div className="pt-4 border-t border-gray-100 dark:border-gray-700/50 flex space-x-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
+              <Skeleton className="h-4 w-1/6" />
+              <Skeleton className="h-4 w-1/6" />
             </div>
           </div>
         ))}

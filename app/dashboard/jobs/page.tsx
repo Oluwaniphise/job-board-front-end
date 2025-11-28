@@ -10,13 +10,16 @@ import { useUserStore } from "@/app/store/useUserStore";
 import JobCard from "../components/jobs/JobCard";
 import jobService from "@/app/services/jobs.service";
 import { Job } from "./interfaces/job.interface";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface JobsResponse {
   data: Job[];
 }
 
 const JobListPage: React.FC = () => {
+  const [hydrated, setHydrated] = useState(false);
   const userId = useUserStore((state) => state.user?.id || "");
+  const initialize = useUserStore((state) => state.initialize);
   const [jobsList, setJobsList] = useState<Job[]>([]);
 
   const {
@@ -31,6 +34,11 @@ const JobListPage: React.FC = () => {
   });
 
   useEffect(() => {
+    initialize();
+    setHydrated(true);
+  }, [initialize]);
+
+  useEffect(() => {
     if (isSuccess) {
       setJobsList(jobs.data);
     } else {
@@ -38,7 +46,7 @@ const JobListPage: React.FC = () => {
     }
   }, [jobs, isSuccess, isJobsError, isPending]);
 
-  if (!userId) {
+  if (hydrated && !userId) {
     return (
       <p className="text-red-500 dark:text-red-400">
         Error: User not identified. Please log in.
@@ -53,16 +61,16 @@ const JobListPage: React.FC = () => {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4 animate-pulse"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4"
           >
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <Skeleton className="h-6 w-3/4" />
             <div className="flex space-x-4">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-4 w-1/4" />
             </div>
             <div className="pt-4 border-t border-gray-100 dark:border-gray-700/50 flex space-x-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
+              <Skeleton className="h-4 w-1/6" />
+              <Skeleton className="h-4 w-1/6" />
             </div>
           </div>
         ))}

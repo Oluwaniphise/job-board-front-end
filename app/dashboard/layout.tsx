@@ -1,7 +1,9 @@
 "use client";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { FiMenu, FiX } from "react-icons/fi";
 import AuthGuard from "../components/AuthGuard";
 import { useUserStore } from "../store/useUserStore";
 
@@ -11,40 +13,78 @@ interface DashboardLayoutProps {
 
 const navLinkClass =
   "block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors";
+const activeNavClass =
+  "bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-white";
 
-const EmployerNav = () => (
+const normalizePath = (path: string) =>
+  path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+
+const isActive = (href: string, pathname: string) =>
+  normalizePath(pathname) === normalizePath(href);
+
+const NavLink = ({
+  href,
+  label,
+  pathname,
+}: {
+  href: string;
+  label: string;
+  pathname: string;
+}) => (
+  <Link
+    href={href}
+    className={`${navLinkClass} ${
+      isActive(href, pathname) ? activeNavClass : ""
+    }`}
+  >
+    {label}
+  </Link>
+);
+
+const EmployerNav = ({ pathname }: { pathname: string }) => (
   <div className="space-y-2">
-    <Link href="/dashboard/jobs/create-job" className={navLinkClass}>
-      Create Job
-    </Link>
-    <Link href="/dashboard/jobs/my-jobs" className={navLinkClass}>
-      My Jobs
-    </Link>
-    <Link href="/dashboard/jobs" className={navLinkClass}>
-      Applications
-    </Link>
+    <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
+    <NavLink
+      href="/dashboard/jobs/create-job"
+      label="Create Job"
+      pathname={pathname}
+    />
+    <NavLink
+      href="/dashboard/jobs/my-jobs"
+      label="My Jobs"
+      pathname={pathname}
+    />
+    <NavLink href="/dashboard/jobs" label="Applications" pathname={pathname} />
   </div>
 );
 
-const CandidateNav = () => (
+const CandidateNav = ({ pathname }: { pathname: string }) => (
   <div className="space-y-2">
-    <Link href="/dashboard/jobs" className={navLinkClass}>
-      Browse Jobs
-    </Link>
-    <Link href="/dashboard/jobs" className={navLinkClass}>
-      View Applications
-    </Link>
+    <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
+    <NavLink href="/dashboard/jobs" label="Browse Jobs" pathname={pathname} />
+    <NavLink
+      href="/dashboard/jobs"
+      label="View Applications"
+      pathname={pathname}
+    />
   </div>
 );
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { user, signOut } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
   const nav =
     user?.role?.toLowerCase() === "employer" ? (
-      <EmployerNav />
+      <EmployerNav pathname={pathname} />
     ) : (
-      <CandidateNav />
+      <CandidateNav pathname={pathname} />
     );
 
   const handleLogout = () => {
@@ -54,10 +94,32 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <AuthGuard>
-      <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-        <aside className="w-64 bg-white dark:bg-gray-800 p-4 shadow-lg flex flex-col justify-between">
+      <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/40 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        <aside
+          className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 p-4 shadow-lg flex flex-col justify-between transform transition-transform duration-200 md:static md:translate-x-0 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
           <div>
-            <h3 className="text-xl font-bold mb-6 text-blue-600">Dashboard</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-blue-600">J.A.D</h3>
+              <button
+                type="button"
+                className="md:hidden text-gray-600 dark:text-gray-200"
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close sidebar"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
             <nav className="space-y-2">{nav}</nav>
           </div>
 
@@ -70,7 +132,24 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </button>
         </aside>
 
-        <main className="flex-1 overflow-y-auto p-8">{children}</main>
+        <div className="flex-1 flex flex-col">
+          <header className="md:hidden flex items-center justify-between px-4 py-3 shadow-sm bg-white dark:bg-gray-800">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="text-gray-700 dark:text-gray-200"
+              aria-label="Open sidebar"
+            >
+              <FiMenu size={22} />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Dashboard
+            </h1>
+            <div className="w-6" />
+          </header>
+
+          <main className="flex-1 overflow-y-auto p-4 md:p-8">{children}</main>
+        </div>
       </div>
     </AuthGuard>
   );

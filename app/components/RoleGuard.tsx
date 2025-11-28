@@ -26,9 +26,9 @@ const RoleGuard = ({ allowedRoles, children, redirectTo = "/dashboard" }: RoleGu
     }
   }, [allowedRoles, redirectTo, role, router]);
 
-  if (!role || !allowedRoles.map((r) => r.toLowerCase()).includes(role)) {
-    return <div>Redirecting...</div>;
-  }
+  // if (!role || !allowedRoles.map((r) => r.toLowerCase()).includes(role)) {
+  //   return <div>Redirecting...</div>;
+  // }
 
   return <>{children}</>;
 };
