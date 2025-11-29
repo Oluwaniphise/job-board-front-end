@@ -15,7 +15,6 @@ axiosClient.interceptors.request.use(async (config) => {
       config.headers.Authorization = `Bearer ${token}`;
     }
   } catch (error) {
-    console.log(error);
   }
   return config;
 });

@@ -33,7 +33,6 @@ const SignUpPage: React.FC = () => {
   } = useMutation({
     mutationFn: authService.register,
     onSuccess: ({ data }) => {
-      console.log(data);
       toast.success("Registration successful! Please log in.");
 
       setInterval(() => {
@@ -50,9 +49,7 @@ const SignUpPage: React.FC = () => {
   });
 
   useEffect(() => {
-    const subscription = watch((formData) => {
-      console.log("Full Form State:", { values: formData, errors, isValid });
-    });
+    const subscription = watch((formData) => {});
     return () => subscription.unsubscribe();
   }, [watch, errors, isValid]);
 

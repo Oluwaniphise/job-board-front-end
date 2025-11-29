@@ -33,18 +33,7 @@ const GoogleAuthRedirectHandler: React.FC = () => {
 
     hasHandledAuth.current = true;
 
-    console.log("Google Auth Redirect Params:", {
-      email,
-      id,
-      role,
-      firstName,
-      lastName,
-      accessToken,
-      authError,
-    });
-
     if (authError) {
-      console.error("Google Sign-In Error:", authError);
       // Redirect to login page or show an error state
       router.replace("/auth/login?authError=true");
       return;

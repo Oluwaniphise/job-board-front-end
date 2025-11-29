@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 import AuthGuard from "../components/AuthGuard";
 import { useUserStore } from "../store/useUserStore";
+import { getAccessToken } from "../utils/authUtils";
 
 interface DashboardLayoutProps {
   children: ReactNode;

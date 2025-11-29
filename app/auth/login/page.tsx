@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { FiLoader } from "react-icons/fi";
 import { useUserStore } from "../../store/useUserStore";
+import { getAccessToken } from "@/app/utils/authUtils";
 
 const LoginPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -22,18 +23,6 @@ const LoginPage: React.FC = () => {
   });
 
   const { setUser } = useUserStore();
-  const accessToken = useUserStore((state) => state.accessToken);
-  const initialize = useUserStore((state) => state.initialize);
-
-  React.useEffect(() => {
-    initialize();
-  }, [initialize]);
-
-  React.useEffect(() => {
-    if (accessToken) {
-      router.replace("/dashboard");
-    }
-  }, [accessToken, router]);
 
   const {
     register,
@@ -59,13 +48,13 @@ const LoginPage: React.FC = () => {
 
       setUser(data.user, data.accessToken);
 
-      if (searchParams.get("r")) {
-        router.push(`/${searchParams.get("r")}`);
+      const next = searchParams.get("next");
+      if (next) {
+        router.push(`/${next}`);
       } else {
         router.push("/dashboard");
       }
       toast.success("Login successful!");
-      console.log(data);
     },
     onError: (error) => {
       // @ts-ignore

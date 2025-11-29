@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
+import { useUserStore } from "./store/useUserStore";
 
 const features = [
   {
@@ -19,9 +23,42 @@ const features = [
 ];
 
 export default function Home() {
+  const user = useUserStore((state) => state.user);
+  const initialize = useUserStore((state) => state.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white">
-      <div className="mx-auto max-w-6xl px-4 py-16 lg:py-24">
+      <div className="mx-auto max-w-6xl px-4 py-10 lg:py-16">
+        <header className="mb-10 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+          <Link
+            href="/"
+            className="text-lg font-semibold text-white hover:text-blue-200 transition"
+          >
+            J.A.D
+          </Link>
+          <div className="flex items-center gap-3 text-sm">
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 transition"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="rounded-md border border-white/20 px-4 py-2 font-semibold text-white hover:border-white/40 hover:bg-white/5 transition"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </header>
+
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-100 ring-1 ring-blue-500/40">
