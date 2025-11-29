@@ -12,7 +12,7 @@ import {
   FiMapPin,
   FiShield,
 } from "react-icons/fi";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Job } from "../interfaces/job.interface";
 import jobService from "@/app/services/jobs.service";
@@ -26,11 +26,16 @@ interface JobResponse {
   data: Job;
 }
 
+interface ApplicationStatusResponse {
+  hasApplied: boolean;
+}
+
 const JobDetailsPage: React.FC = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const role = useUserStore((state) => state.user?.role?.toLowerCase());
   const [applyOpen, setApplyOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   type ApplyFormValues = {
     coverLetterText: string;
@@ -68,9 +73,22 @@ const JobDetailsPage: React.FC = () => {
   });
 
   const {
+    data: applicationStatus,
+    isPending: isCheckingApplicationStatus,
+    refetch: refetchApplicationStatus,
+  } = useQuery<ApplicationStatusResponse>({
+    queryKey: ["job-application-status", jobId],
+    queryFn: async () => {
+      const response = await candidateService.hasCandidateAppliedToJob(jobId);
+      return response.data;
+    },
+    enabled: Boolean(jobId) && role === "candidate",
+  });
+
+  const {
     mutate: applyToJob,
     isPending: isApplying,
-    isSuccess: hasApplied,
+    isSuccess: hasAppliedMutation,
     reset: resetApplyState,
   } = useMutation({
     mutationKey: ["apply-job", jobId],
@@ -80,6 +98,11 @@ const JobDetailsPage: React.FC = () => {
       toast.success("Application submitted successfully");
       setApplyOpen(false);
       reset();
+      queryClient.setQueryData<ApplicationStatusResponse>(
+        ["job-application-status", jobId],
+        () => ({ hasApplied: true })
+      );
+      refetchApplicationStatus();
     },
     onError: (err: any) => {
       toast.error(
@@ -95,6 +118,8 @@ const JobDetailsPage: React.FC = () => {
 
   const job = data?.data;
   const canApply = role === "candidate";
+  const hasApplied =
+    (applicationStatus?.hasApplied ?? false) || hasAppliedMutation;
 
   const formatDate = (value: string | undefined) => {
     if (!value) return "N/A";
@@ -205,11 +230,18 @@ const JobDetailsPage: React.FC = () => {
             </span>
             <button
               type="button"
-              disabled={!canApply || isApplying}
+              disabled={
+                !canApply ||
+                isApplying ||
+                hasApplied ||
+                isCheckingApplicationStatus
+              }
               onClick={() => setApplyOpen(true)}
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors w-full md:w-auto"
             >
-              {isApplying && <FiLoader className="animate-spin" />}
+              {(isApplying || isCheckingApplicationStatus) && (
+                <FiLoader className="animate-spin" />
+              )}
               {hasApplied ? "Applied" : "Apply Now"}
             </button>
             {!canApply && (

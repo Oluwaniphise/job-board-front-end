@@ -10,6 +10,7 @@ import jobService from "@/app/services/jobs.service";
 import RoleGuard from "@/app/components/RoleGuard";
 import { FiPlus, FiPlusCircle } from "react-icons/fi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 const JobListEmployer: React.FC = () => {
   const [hydrated, setHydrated] = useState(false);
@@ -104,8 +105,8 @@ const JobListEmployer: React.FC = () => {
     content = (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            My Job Postings ({jobsList.length})
+          <h2 className="flex items-center gap-2 text-3xl font-bold text-gray-900 dark:text-white">
+            My Job Postings <Badge variant="default">{jobsList.length}</Badge>
           </h2>
           <Link
             href="/dashboard/jobs/create-job"

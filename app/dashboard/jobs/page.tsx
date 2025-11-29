@@ -11,6 +11,7 @@ import JobCard from "../components/jobs/JobCard";
 import jobService from "@/app/services/jobs.service";
 import { Job } from "./interfaces/job.interface";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 interface JobsResponse {
   data: Job[];
@@ -105,8 +106,9 @@ const JobListPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Job Listings ({jobsList.length})
+        <h2 className="flex items-center gap-2 text-3xl font-bold text-gray-900 dark:text-white">
+          Job Listings
+          <Badge variant="default">{jobsList.length}</Badge>
         </h2>
       </div>
 

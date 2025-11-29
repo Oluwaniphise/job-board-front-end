@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignUpFormFields } from "../../schema/signup-schema";
 import { GoogleSignIn } from "../GoogleSignIn";
 import { useMutation } from "@tanstack/react-query";
-import authService from "../../services/authService";
+import authService from "../../services/auth.service";
 import { FiLoader } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -268,6 +268,17 @@ const SignUpPage: React.FC = () => {
         {/* Google Sign-Up Button */}
         <div className="flex justify-center">
           <GoogleSignIn />
+        </div>
+
+        <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+          Already registered?{" "}
+          <button
+            type="button"
+            onClick={() => router.push("/auth/login")}
+            className="font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            Sign in
+          </button>
         </div>
       </div>
     </div>

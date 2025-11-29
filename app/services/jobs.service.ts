@@ -13,13 +13,9 @@ class JobService {
     return await axiosClient.get(`/jobs/${id}`);
   };
 
-  // getEmployerJobApplications = async (id: string) => {
-  //   return await axiosClient.get(`/employer/job-applications/${id}`);
-  // };
-
-  // applyToJob = async (id: string, payload: any) => {
-  //   return await axiosClient.post(`/applications/${id}/apply`, payload);
-  // };
+  getApplicationsForAJob = async (id: string) => {
+    return await axiosClient.get(`/applications/job/${id}`);
+  };
 
   createJob = async (payload: any) => {
     return await axiosClient.post(`/jobs`, payload);

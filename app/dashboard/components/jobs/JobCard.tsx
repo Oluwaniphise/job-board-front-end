@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {
   FiBarChart2,
   FiBriefcase,
@@ -20,6 +21,7 @@ import { Job } from "../../jobs/interfaces/job.interface";
 import { useUserStore } from "@/app/store/useUserStore";
 import { Modal, ModalClose } from "@/components/ui/modal";
 import jobService from "@/app/services/jobs.service";
+import candidateService from "@/app/services/candidate.service";
 import toast from "react-hot-toast";
 
 interface JobCardProps {
@@ -27,6 +29,7 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -116,6 +119,30 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
   const role = useUserStore((state) => state.user?.role);
   const isEmployer = role?.toLowerCase() === "employer";
+  const isCandidate = role?.toLowerCase() === "candidate";
+
+  const { data: applicationStatus, isPending: isCheckingApplicationStatus } =
+    useQuery<{ hasApplied: boolean }>({
+      queryKey: ["job-application-status", job.id],
+      queryFn: async () => {
+        const response = await candidateService.hasCandidateAppliedToJob(
+          job.id
+        );
+        return response.data;
+      },
+      enabled: isCandidate,
+    });
+
+  const { data: jobApplicationsData, isPending: isLoadingApplicationsCount } =
+    useQuery<{ data?: unknown[] }>({
+      queryKey: ["job-applications-count", job.id],
+      queryFn: async () => jobService.getApplicationsForAJob(job.id),
+      enabled: true,
+    });
+
+  const applicationsCount =
+     jobApplicationsData?.data?.length  ?? 0;
+  const hasApplied = applicationStatus?.hasApplied ?? false;
 
   const getStatusStyle = (status: Job["status"]) => {
     switch (status) {
@@ -183,7 +210,12 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         </span>
         <div className="flex items-center gap-1">
           <FiUsers className="text-blue-500" />
-          <strong>{job.applications}</strong> applications
+          {isEmployer && isLoadingApplicationsCount ? (
+            <FiLoader className="animate-spin text-blue-500" />
+          ) : (
+            <strong>{applicationsCount}</strong>
+          )}{" "}
+          applications
         </div>
       </div>
 
@@ -218,9 +250,9 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             >
               <FiTrash2 /> Delete
             </button>
-            {job.applications > 0 && (
+            {applicationsCount > 0 && (
               <Link
-                href={`/jobs/${job.id}/applications`}
+                href={`/dashboard/my-jobs/${job.id}/applications`}
                 className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
               >
                 <FiUsers /> Review Applications
@@ -235,12 +267,19 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             >
               <FiFileText /> View Job
             </Link>
-            {/* <Link
-          href={`/dashboard/jobs/${job.id}/apply`}
-          className="ml-auto inline-flex items-center gap-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md shadow-sm transition-colors"
-        >
-          Apply Now
-        </Link> */}
+            {isCandidate && (
+              <button
+                type="button"
+                disabled={hasApplied || isCheckingApplicationStatus}
+                onClick={() => router.push(`/dashboard/jobs/${job.id}`)}
+                className="ml-auto inline-flex items-center gap-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md shadow-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isCheckingApplicationStatus && (
+                  <FiLoader className="animate-spin" />
+                )}
+                {hasApplied ? "Applied" : "Apply Now"}
+              </button>
+            )}
           </>
         )}
       </div>

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignUpFormFields } from "../schema/signup-schema";
 import { GoogleSignIn } from "../auth/GoogleSignIn";
 import { useMutation } from "@tanstack/react-query";
-import authService from "../services/authService";
+import authService from "../services/auth.service";
 import { FiLoader } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

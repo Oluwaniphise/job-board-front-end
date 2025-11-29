@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormFields } from "../../schema/login-schema";
 import { GoogleSignIn } from "../GoogleSignIn";
 import { useMutation } from "@tanstack/react-query";
-import authService from "../../services/authService";
+import authService from "../../services/auth.service";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -209,6 +209,17 @@ const LoginPage: React.FC = () => {
         {/* Google Sign-In Button */}
         <div className="flex justify-center">
           <GoogleSignIn />
+        </div>
+
+        <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+          Don&apos;t have an account?{" "}
+          <button
+            type="button"
+            onClick={() => router.push("/auth/signup")}
+            className="font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            Sign up
+          </button>
         </div>
       </div>
     </div>

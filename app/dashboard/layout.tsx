@@ -54,7 +54,6 @@ const EmployerNav = ({ pathname }: { pathname: string }) => (
       label="My Jobs"
       pathname={pathname}
     />
-    <NavLink href="/dashboard/jobs" label="Applications" pathname={pathname} />
   </div>
 );
 
@@ -63,7 +62,7 @@ const CandidateNav = ({ pathname }: { pathname: string }) => (
     <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
     <NavLink href="/dashboard/jobs" label="Browse Jobs" pathname={pathname} />
     <NavLink
-      href="/dashboard/jobs"
+      href="/dashboard/my-applications"
       label="View Applications"
       pathname={pathname}
     />
