@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUserStore, User } from "@/app/store/useUserStore";
 import toast from "react-hot-toast";
@@ -77,4 +77,21 @@ const GoogleAuthRedirectHandler: React.FC = () => {
   );
 };
 
-export default GoogleAuthRedirectHandler;
+const GoogleAuthRedirectPage = () => (
+  <Suspense
+    fallback={
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center inline-flex gap-2 items-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+          <FaSpinner />
+          <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+            Completing authentication. Redirecting...
+          </p>
+        </div>
+      </div>
+    }
+  >
+    <GoogleAuthRedirectHandler />
+  </Suspense>
+);
+
+export default GoogleAuthRedirectPage;

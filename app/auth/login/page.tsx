@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,7 +15,7 @@ import { FiLoader } from "react-icons/fi";
 import { useUserStore } from "../../store/useUserStore";
 import { getAccessToken } from "@/app/utils/authUtils";
 
-const LoginPage: React.FC = () => {
+const LoginPageContent: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isLogError, setIsLogError] = React.useState({
@@ -74,15 +74,13 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    // Outer container: Center content vertically and horizontally
+    
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Login Card Container */}
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl dark:bg-gray-800 dark:border dark:border-gray-700">
         <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
           Welcome Back
         </h2>
 
-        {/* Global Error Message from React Query */}
         {primaryError && (
           <div
             className="p-3 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-300"
@@ -97,7 +95,6 @@ const LoginPage: React.FC = () => {
           className="space-y-4"
           noValidate
         >
-          {/* Email Field */}
           <div>
             <label
               htmlFor="email"
@@ -127,7 +124,6 @@ const LoginPage: React.FC = () => {
             )}
           </div>
 
-          {/* Password Field */}
           <div>
             <label
               htmlFor="password"
@@ -157,7 +153,6 @@ const LoginPage: React.FC = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isFormLoading || !isValid}
@@ -214,5 +209,22 @@ const LoginPage: React.FC = () => {
     </div>
   );
 };
+
+const LoginPage: React.FC = () => (
+  <Suspense
+    fallback={
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="inline-flex items-center gap-2 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <FiLoader className="animate-spin" />
+          <span className="text-gray-700 dark:text-gray-300">
+            Loading login...
+          </span>
+        </div>
+      </div>
+    }
+  >
+    <LoginPageContent />
+  </Suspense>
+);
 
 export default LoginPage;
