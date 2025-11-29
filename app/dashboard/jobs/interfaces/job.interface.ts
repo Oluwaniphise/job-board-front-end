@@ -1,5 +1,6 @@
 export interface Job {
   id: string;
+  _id: string; //remove later
   title: string;
   companyName: string;
   status: "Draft" | "Published" | "Archived";

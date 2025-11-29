@@ -11,12 +11,13 @@ import RoleGuard from "@/app/components/RoleGuard";
 import { FiPlus, FiPlusCircle } from "react-icons/fi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Job } from "../interfaces/job.interface";
 
 const JobListEmployer: React.FC = () => {
   const [hydrated, setHydrated] = useState(false);
   const userId = useUserStore((state) => state.user?.id || "");
   const initialize = useUserStore((state) => state.initialize);
-  const [jobsList, setJobsList] = useState([]);
+  const [jobsList, setJobsList] = useState<Job[]>([]);
 
   const {
     data: jobs,
@@ -38,6 +39,7 @@ const JobListEmployer: React.FC = () => {
   useEffect(() => {
     if (isSuccess) {
       setJobsList(jobs.data);
+      console.log(jobsList);
     } else {
       setJobsList([]);
     }
@@ -118,7 +120,7 @@ const JobListEmployer: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {jobsList.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job._id} job={job} /> //check back later
           ))}
         </div>
       </div>
