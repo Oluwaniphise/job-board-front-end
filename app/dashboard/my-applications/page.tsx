@@ -16,6 +16,14 @@ import candidateService from "@/app/services/candidate.service";
 import { useUserStore } from "@/app/store/useUserStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface CandidateApplication {
   _id: string;
@@ -44,6 +52,12 @@ interface CandidateApplicationsResponse {
 }
 
 const MyApplicationsPage = () => {
+  const iconPaths = [
+    "/assets/icons/refresh.svg",
+    "/assets/icons/pending-tick.svg",
+    "/assets/icons/pending-settlements.svg",
+  ];
+
   const role = useUserStore((state) => state.user?.role?.toLowerCase());
 
   const {
@@ -146,19 +160,54 @@ const MyApplicationsPage = () => {
         <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
           My Applications <Badge variant="default">{applications.length}</Badge>
         </h1>
-        <button
-          type="button"
-          onClick={() => refetchApplications()}
-          disabled={isRefetching}
-          className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-60"
-        >
-          {isRefetching ? (
-            <FiLoader className="animate-spin" />
-          ) : (
-            <FiRefreshCcw />
-          )}
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                Show Icons
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Assets Icons</DialogTitle>
+                <DialogDescription>
+                  Displaying your current icon files from the assets folder.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {iconPaths.map((iconPath) => (
+                  <div
+                    key={iconPath}
+                    className="border rounded-lg p-4 flex flex-col items-center gap-2"
+                  >
+                    <img src={iconPath} alt={iconPath.split("/").pop() ?? "icon"} className="w-12 h-12" />
+                    <p className="text-xs text-center text-gray-600 dark:text-gray-300">
+                      {iconPath.split("/").pop()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <button
+            type="button"
+            onClick={() => refetchApplications()}
+            disabled={isRefetching}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-60"
+          >
+            {isRefetching ? (
+              <FiLoader className="animate-spin" />
+            ) : (
+              <FiRefreshCcw />
+            )}
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-4">
