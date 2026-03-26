@@ -20,6 +20,9 @@ import {
   DialogTitle,
 } from "@radix-ui/react-dialog";
 import { DialogHeader, DialogTrigger } from "@/components/ui/dialog";
+import PendingSettlementsIcon from "@/public/assets/icons/pending-settlements.svg";
+import PendingTickIcon from "@/public/assets/icons/pending-tick.svg";
+import RefreshIcon from "@/public/assets/icons/refresh.svg";
 
 const SignUpPage: React.FC = () => {
   const router = useRouter();
@@ -69,13 +72,25 @@ const SignUpPage: React.FC = () => {
     localSignupMutate(data);
   };
 
-  const iconPaths = [
-    "/assets/icons/email.png",
-    "/assets/icons/eye.png",
-    "/assets/icons/pending.png",
-    "/assets/icons/refresh.svg",
-    "/assets/icons/pending-tick.svg",
-    "/assets/icons/pending-settlements.svg",
+  const icons = [
+    { kind: "png" as const, name: "email.png", src: "/assets/icons/email.png" },
+    { kind: "png" as const, name: "eye.png", src: "/assets/icons/eye.png" },
+    {
+      kind: "png" as const,
+      name: "pending.png",
+      src: "/assets/icons/pending.png",
+    },
+    { kind: "svg" as const, name: "refresh.svg", Component: RefreshIcon },
+    {
+      kind: "svg" as const,
+      name: "pending-tick.svg",
+      Component: PendingTickIcon,
+    },
+    {
+      kind: "svg" as const,
+      name: "pending-settlements.svg",
+      Component: PendingSettlementsIcon,
+    },
   ];
   return (
     <>
@@ -97,20 +112,28 @@ const SignUpPage: React.FC = () => {
           </DialogHeader>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {iconPaths.map((iconPath) => (
+            {icons.map((icon) => (
               <div
-                key={iconPath}
+                key={icon.name}
                 className="border rounded-lg p-4 flex flex-col items-center gap-2"
               >
-                <Image
-                  src={iconPath}
-                  alt={iconPath.split("/").pop() ?? "icon"}
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 object-contain"
-                />
+                {icon.kind === "png" ? (
+                  <Image
+                    src={icon.src}
+                    alt={icon.name}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 object-contain"
+                  />
+                ) : (
+                  <icon.Component
+                    className="h-12 w-12"
+                    role="img"
+                    aria-label={icon.name}
+                  />
+                )}
                 <p className="text-xs text-center text-gray-600 dark:text-gray-300">
-                  {iconPath.split("/").pop()}
+                  {icon.name}
                 </p>
               </div>
             ))}
