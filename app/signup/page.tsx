@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,7 +13,12 @@ import { FiLoader } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@radix-ui/react-dialog";
 import { DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 
 const SignUpPage: React.FC = () => {
@@ -63,7 +69,7 @@ const SignUpPage: React.FC = () => {
     localSignupMutate(data);
   };
 
-   const iconPaths = [
+  const iconPaths = [
     "/assets/icons/email.png",
     "/assets/icons/eye.png",
     "/assets/icons/pending.png",
@@ -73,46 +79,45 @@ const SignUpPage: React.FC = () => {
   ];
   return (
     <>
-      <div className="flex items-center gap-2">
-        <Dialog>
-          <DialogTrigger asChild>
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              Show Icons
-            </button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Assets Icons</DialogTitle>
-              <DialogDescription>
-                Displaying your current icon files from the assets folder.
-              </DialogDescription>
-            </DialogHeader>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            Show Icons
+          </button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assets Icons</DialogTitle>
+            <DialogDescription>
+              Displaying your current icon files from the assets folder.
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {iconPaths.map((iconPath) => (
-                <div
-                  key={iconPath}
-                  className="border rounded-lg p-4 flex flex-col items-center gap-2"
-                >
-                  <img
-                    src={iconPath}
-                    alt={iconPath.split("/").pop() ?? "icon"}
-                    // className="w-12 h-12"
-                  />
-                  <p className="text-xs text-center text-gray-600 dark:text-gray-300">
-                    {iconPath.split("/").pop()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
-
-      
-      </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {iconPaths.map((iconPath) => (
+              <div
+                key={iconPath}
+                className="border rounded-lg p-4 flex flex-col items-center gap-2"
+              >
+                <Image
+                  src={iconPath}
+                  alt={iconPath.split("/").pop() ?? "icon"}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 object-contain"
+                />
+                <p className="text-xs text-center text-gray-600 dark:text-gray-300">
+                  {iconPath.split("/").pop()}
+                </p>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+      <div className="flex items-center gap-2"></div>
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Sign Up Card Container */}
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl dark:bg-gray-800 dark:border dark:border-gray-700">
