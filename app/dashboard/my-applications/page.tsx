@@ -53,6 +53,9 @@ interface CandidateApplicationsResponse {
 
 const MyApplicationsPage = () => {
   const iconPaths = [
+    "/assets/icons/email.png",
+    "/assets/icons/eye.png",
+    "/assets/icons/pending.png",
     "/assets/icons/refresh.svg",
     "/assets/icons/pending-tick.svg",
     "/assets/icons/pending-settlements.svg",
@@ -173,9 +176,7 @@ const MyApplicationsPage = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Assets Icons</DialogTitle>
-                <DialogDescription>
-                  Displaying your current icon files from the assets folder.
-                </DialogDescription>
+                <DialogDescription>Showing both PNG and SVG icon sets.</DialogDescription>
               </DialogHeader>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

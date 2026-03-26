@@ -63,12 +63,14 @@ const SignUpPage: React.FC = () => {
     localSignupMutate(data);
   };
 
-    const iconPaths = [
+   const iconPaths = [
+    "/assets/icons/email.png",
+    "/assets/icons/eye.png",
+    "/assets/icons/pending.png",
     "/assets/icons/refresh.svg",
     "/assets/icons/pending-tick.svg",
     "/assets/icons/pending-settlements.svg",
   ];
-
   return (
     <>
       <div className="flex items-center gap-2">
@@ -98,7 +100,7 @@ const SignUpPage: React.FC = () => {
                   <img
                     src={iconPath}
                     alt={iconPath.split("/").pop() ?? "icon"}
-                    className="w-12 h-12"
+                    // className="w-12 h-12"
                   />
                   <p className="text-xs text-center text-gray-600 dark:text-gray-300">
                     {iconPath.split("/").pop()}
