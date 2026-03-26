@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,16 +12,7 @@ import { FiLoader } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@radix-ui/react-dialog";
-import { DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import PendingSettlementsIcon from "@/public/assets/icons/pending-settlements.svg";
-import PendingTickIcon from "@/public/assets/icons/pending-tick.svg";
-import RefreshIcon from "@/public/assets/icons/refresh.svg";
+import GeocodeComponent from "../components/GeolocationApi";
 
 const SignUpPage: React.FC = () => {
   const router = useRouter();
@@ -72,75 +62,10 @@ const SignUpPage: React.FC = () => {
     localSignupMutate(data);
   };
 
-  const icons = [
-    { kind: "png" as const, name: "email.png", src: "/assets/icons/email.png" },
-    { kind: "png" as const, name: "eye.png", src: "/assets/icons/eye.png" },
-    {
-      kind: "png" as const,
-      name: "pending.png",
-      src: "/assets/icons/pending.png",
-    },
-    { kind: "svg" as const, name: "refresh.svg", Component: RefreshIcon },
-    {
-      kind: "svg" as const,
-      name: "pending-tick.svg",
-      Component: PendingTickIcon,
-    },
-    {
-      kind: "svg" as const,
-      name: "pending-settlements.svg",
-      Component: PendingSettlementsIcon,
-    },
-  ];
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            Show Icons
-          </button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Assets Icons</DialogTitle>
-            <DialogDescription>
-              Displaying your current icon files from the assets folder.
-            </DialogDescription>
-          </DialogHeader>
+    
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {icons.map((icon) => (
-              <div
-                key={icon.name}
-                className="border rounded-lg p-4 flex flex-col items-center gap-2"
-              >
-                {icon.kind === "png" ? (
-                  <Image
-                    src={icon.src}
-                    alt={icon.name}
-                    width={48}
-                    height={48}
-                    className="h-12 w-12 object-contain"
-                  />
-                ) : (
-                  <icon.Component
-                    className="h-12 w-12"
-                    role="img"
-                    aria-label={icon.name}
-                  />
-                )}
-                <p className="text-xs text-center text-gray-600 dark:text-gray-300">
-                  {icon.name}
-                </p>
-              </div>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-      <div className="flex items-center gap-2"></div>
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Sign Up Card Container */}
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl dark:bg-gray-800 dark:border dark:border-gray-700">
